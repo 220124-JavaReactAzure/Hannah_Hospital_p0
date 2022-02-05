@@ -1,8 +1,11 @@
 package com.revature.p0.models;
 
 public class User {
-
+	
+	// either student or faculty
 	private String type;
+	
+	// the user's unique id
 	private int ID;
 	private String firstName;
 	private String lastName;

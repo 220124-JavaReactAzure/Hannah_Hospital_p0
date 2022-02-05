@@ -5,6 +5,8 @@ public class Course {
 	private int courseId;
 	private String courseName;
 	private String courseDepartment;
+	private int availabeSlots;
+	private int totalStudentsInCourse;
 
 	public Course(int courseId, String courseName, String courseDepartment) {
 		super();
@@ -12,6 +14,20 @@ public class Course {
 		this.courseName = courseName;
 		this.courseDepartment = courseDepartment;
 	}
+	
+	
+
+	public Course(int courseId, String courseName, String courseDepartment, int availabeSlots,
+			int totalStudentsInCourse) {
+		super();
+		this.courseId = courseId;
+		this.courseName = courseName;
+		this.courseDepartment = courseDepartment;
+		this.availabeSlots = availabeSlots;
+		this.totalStudentsInCourse = totalStudentsInCourse;
+	}
+
+
 
 	public int getCourseId() {
 		return courseId;
@@ -37,4 +53,29 @@ public class Course {
 		this.courseDepartment = courseDepartment;
 	}
 
+
+
+	public int getAvailabeSlots() {
+		return availabeSlots;
+	}
+
+
+
+	public void setAvailabeSlots(int availabeSlots) {
+		this.availabeSlots = availabeSlots;
+	}
+
+
+
+	public int getTotalStudentsInCourse() {
+		return totalStudentsInCourse;
+	}
+
+
+
+	public void setTotalStudentsInCourse(int totalStudentsInCourse) {
+		this.totalStudentsInCourse = totalStudentsInCourse;
+	}
+
+	
 }

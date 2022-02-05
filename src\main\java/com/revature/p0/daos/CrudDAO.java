@@ -1,4 +1,5 @@
 package com.revature.p0.daos;
+import com.revature.p0.models.User;
 import com.revature.p0.util.collections.List;
 
 public interface CrudDAO<T> {
@@ -10,15 +11,22 @@ public interface CrudDAO<T> {
 	
 	
 	// read operations
-	List<T> findAll();
-	T findById(String id);
+	T findByIdAndType(int id, String type);
 	
 	
 	// update operations
-	boolean update(T newUpdatedObj);
+	boolean update(T updatedUser, String attribute);
+	
+	// i will need an update method for courses
+	
 	
 	
 	// delete operations
-	boolean delete(String id);
+	boolean delete(int id);
+
+
+	List<User> findAllStudents();
+	
+	List<User> findAllFaculty();
 	
 }
