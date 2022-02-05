@@ -229,6 +229,7 @@ public class UserDAO implements CrudDAO<User> {
 
 		
 		ResultSet rs = pstmt.executeQuery();
+		// this is to check if there were any updates, if successful return true if not return false
 		int count = pstmt.executeUpdate();
 		if(count > 0) {
 			return true;

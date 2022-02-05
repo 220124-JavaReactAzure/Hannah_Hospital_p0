@@ -7,7 +7,10 @@ public class Course {
 	private String courseDepartment;
 	private int availabeSlots;
 	private int totalStudentsInCourse;
-
+	
+	public Course(int courseId) {
+		this.courseId = courseId;
+	}
 	public Course(int courseId, String courseName, String courseDepartment) {
 		super();
 		this.courseId = courseId;

@@ -11,7 +11,9 @@ public interface CrudDAO<T> {
 	
 	
 	// read operations
-	T findByIdAndType(int id, String type);
+//	T findByIdAndType(int id, String type);
+	
+	// create some findByID type function
 	
 	
 	// update operations
