@@ -5,8 +5,12 @@ public class Course {
 	private int courseId;
 	private String courseName;
 	private String courseDepartment;
-	private int availabeSlots;
+	private int availableSlots;
 	private int totalStudentsInCourse;
+	
+	public Course() {
+		
+	}
 	
 	public Course(int courseId) {
 		this.courseId = courseId;
@@ -20,13 +24,13 @@ public class Course {
 	
 	
 
-	public Course(int courseId, String courseName, String courseDepartment, int availabeSlots,
+	public Course(int courseId, String courseName, String courseDepartment, int availableSlots,
 			int totalStudentsInCourse) {
 		super();
 		this.courseId = courseId;
 		this.courseName = courseName;
 		this.courseDepartment = courseDepartment;
-		this.availabeSlots = availabeSlots;
+		this.availableSlots = availableSlots;
 		this.totalStudentsInCourse = totalStudentsInCourse;
 	}
 
@@ -58,14 +62,14 @@ public class Course {
 
 
 
-	public int getAvailabeSlots() {
-		return availabeSlots;
+	public int getAvailableSlots() {
+		return availableSlots;
 	}
 
 
 
-	public void setAvailabeSlots(int availabeSlots) {
-		this.availabeSlots = availabeSlots;
+	public void setAvailableSlots(int availableSlots) {
+		this.availableSlots = availableSlots;
 	}
 
 

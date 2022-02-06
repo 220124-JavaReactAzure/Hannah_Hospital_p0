@@ -15,6 +15,10 @@ public class User {
 	public User() {
 		
 	}
+	
+	public User(String type) {
+		this.type = type;
+	}
 
 	public User(String type, String firstName, String lastName) {
 		super();

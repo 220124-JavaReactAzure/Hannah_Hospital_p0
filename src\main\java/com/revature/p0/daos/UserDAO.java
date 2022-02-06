@@ -54,6 +54,7 @@ public class UserDAO implements CrudDAO<User> {
 		}
 		return null;
 	}
+	
 
 	// find the user by username and Type
 	public User findByUsernameAndType(String username, String type) throws AuthenticationException {
@@ -94,8 +95,91 @@ public class UserDAO implements CrudDAO<User> {
 		return null;
 	}
 
-	// find all users who are students
+	
 	@Override
+	public List<User> findAll(String type){
+		List<User> userList = new ArrayList<>();
+		String sql = "";
+
+		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+			switch(type) {
+			case "student":
+				sql = "select * from students";
+				break;
+			case "faculty":
+				sql = "select * from faculty";
+				break;
+			}
+			
+			Statement s = (Statement) conn.createStatement();
+			ResultSet resultSet = ((java.sql.Statement) s).executeQuery(sql);
+
+			while (resultSet.next()) {
+				// idk if I did this part correctly
+				User user = new User(type);
+				user.setID(resultSet.getInt(type+ "_id"));
+				user.setFirstName(resultSet.getString(type+ "_first_name"));
+				user.setLastName(resultSet.getString(type+ "_last_name"));
+				user.setUserName(resultSet.getString(type+ "_username"));
+				user.setPassword(resultSet.getString(type+ "_password"));
+
+				userList.add(user);
+			}
+
+			return userList;
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		return null;
+		
+	}
+	
+	public boolean create(User obj) {
+		if(obj.getType()=="student") {
+			// should I first include some kind of check to first see if the user is already in the db? idk 
+			try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+				String sql = "insert into students(student_id, student_first_name, student_last_name, student_username, student_password) values (?, ?, ?, ?, ?);";
+				
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, obj.getID());
+				pstmt.setString(2, obj.getFirstName());
+				pstmt.setString(3, obj.getLastName());
+				pstmt.setString(4, obj.getUserName());
+				pstmt.setString(5, obj.getPassword());
+				
+				
+				ResultSet rs = pstmt.executeQuery();
+				// this is to check if there were any updates, if successful return true if not return false
+				int count = pstmt.executeUpdate();
+				if(count > 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
+
+
+				}
+
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return false;
+
+				}
+		else {
+			throw new AuthenticationException("You cannot create a new faculty member.");
+		}
+	}
+	
+	
+	
+	
+	
+	// find all users who are students
 	public List<User> findAllStudents() {
 
 		List<User> studentList = new ArrayList<>();
@@ -128,13 +212,12 @@ public class UserDAO implements CrudDAO<User> {
 	}
 
 	// find all users who are faculty
-	@Override
 	public List<User> findAllFaculty() {
 
 		List<User> facultyList = new ArrayList<>();
 
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-			String sql = "select * from faculty";
+			String sql = "select * from faculty;";
 			Statement s = (Statement) conn.createStatement();
 
 			ResultSet resultSet = ((java.sql.Statement) s).executeQuery(sql);
@@ -159,6 +242,8 @@ public class UserDAO implements CrudDAO<User> {
 
 		return null;
 	}
+	
+	
 
 	@Override
 	public User findByIdAndType(int ID, String type) {
@@ -200,10 +285,10 @@ public class UserDAO implements CrudDAO<User> {
 	}
 
 	@Override
-	public boolean update(User updatedUser, String attribute) {
+	public boolean update(User updatedObject) {
 		// TODO Auto-generated method stub
-		String userType = updatedUser.getType();
-		int userID = updatedUser.getID();
+		String userType = updatedObject.getType();
+		int userID = updatedObject.getID();
 		String sql = "";
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()){
 			
@@ -221,10 +306,10 @@ public class UserDAO implements CrudDAO<User> {
 		
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, userID);
-		pstmt.setString(2, updatedUser.getFirstName());
-		pstmt.setString(3, updatedUser.getLastName());
-		pstmt.setString(4, updatedUser.getUserName());
-		pstmt.setString(5, updatedUser.getPassword());
+		pstmt.setString(2, updatedObject.getFirstName());
+		pstmt.setString(3, updatedObject.getLastName());
+		pstmt.setString(4, updatedObject.getUserName());
+		pstmt.setString(5, updatedObject.getPassword());
 		pstmt.setInt(6, userID);
 
 		
@@ -248,10 +333,12 @@ public class UserDAO implements CrudDAO<User> {
 
 		}
 	
+	
 
 	@Override
-	public boolean delete(int ID) {
+	public boolean delete(int ID, String type) {
 		// TODO Auto-generated method stub
+		
 		
 		
 		return false;
