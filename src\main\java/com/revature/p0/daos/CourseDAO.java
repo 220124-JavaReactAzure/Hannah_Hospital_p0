@@ -140,7 +140,70 @@ public class CourseDAO implements CrudDAO<Course> {
 
 		return null;
 	}
+	
+	// this function will return all courses that are available 
+	public List<Course> findAllAvailableCourses() {
 
+		List<Course> courseList = new ArrayList<>();
+
+		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+			// maybe somehow include functionality to only include courses that have available_slots > 0
+			// is this the correct SQL syntax? for multiple where clauses
+			String sql = "select * from registrationcatalog where available_slots > 0 ;";
+			Statement s = (Statement) conn.createStatement();
+
+			ResultSet resultSet = ((java.sql.Statement) s).executeQuery(sql);
+
+			while (resultSet.next()) {
+				Course course = new Course();
+				course.setCourseId(resultSet.getInt("course_id"));
+				course.setCourseName(resultSet.getString("course_name"));
+				course.setCourseDepartment(resultSet.getString("course_department"));
+				course.setAvailableSlots(resultSet.getInt("available_slots"));
+				course.setTotalStudentsInCourse(resultSet.getInt("total_students_in_course"));
+
+				courseList.add(course);
+			}
+
+			return courseList;
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	
+	// create a function that will return a boolean and tell you if a course, given a course_id, is available or see if it has any open slots
+	public boolean isCourseAvailable(int courseID) {
+		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+			// is this the correct syntax
+			String sql = "select * from registrationcatalog where course_id = ? ;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, courseID);
+			ResultSet rs = pstmt.executeQuery();
+			int available_slots = rs.getInt("available_slots");
+			if(available_slots > 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
+	
+	
+
+	// make sure that all students registered for said deleted course, get unregistered for the course in the studentcourserecords
 	public boolean delete(int id, String type) {
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 			String sql = "delete from registrationcatalog where course_id = ?;";

@@ -96,6 +96,9 @@ public class UserDAO implements CrudDAO<User> {
 	}
 
 	
+	
+	
+	
 	@Override
 	public List<User> findAll(String type){
 		List<User> userList = new ArrayList<>();
@@ -137,6 +140,7 @@ public class UserDAO implements CrudDAO<User> {
 		
 	}
 	
+	// this is to create a new student, or rather register a new student into the students table
 	public boolean create(User obj) {
 		if(obj.getType()=="student") {
 			// should I first include some kind of check to first see if the user is already in the db? idk 

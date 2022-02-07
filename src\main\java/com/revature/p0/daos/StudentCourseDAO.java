@@ -19,6 +19,7 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 	@Override
 	public boolean create(StudentCourseInstance obj) {
 		// TODO Auto-generated method stub
+		// include functionality so that a studentCourseInstance can only be made if the available_slots > 0 in the registrationCatalog. I want to get a boolean as a result
 		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
 			String sql = "insert into studentcourserecords(student_course_id, course_id, student_id) values (?, ?, ?);";
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -94,6 +95,34 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 			e.printStackTrace();
 		}
 
+		return null;
+	}
+	
+	// find all the courses that a particular student is registered for
+	public List<StudentCourseInstance> findAllRegisteredCourses(int studentID){
+		// if the student is valid, and authenticated. include some functionality for that first
+		List<StudentCourseInstance> listSCI = new ArrayList<>();
+		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+			String sql = "select * from studentcourserecords where student_id = ? ; ";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, studentID);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				StudentCourseInstance sci = new StudentCourseInstance();
+				sci.setStudentCourseId(rs.getInt("student_course_id"));
+				sci.setCourseId(rs.getInt("course_id"));
+				sci.setStudentId(rs.getInt("student_id"));
+				listSCI.add(sci);
+				
+			}
+			return listSCI;
+			
+			
+			
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
