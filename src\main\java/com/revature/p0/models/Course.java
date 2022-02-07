@@ -15,12 +15,19 @@ public class Course {
 	public Course(int courseId) {
 		this.courseId = courseId;
 	}
+	
+	public Course(String courseName) {
+		this.courseName = courseName;
+	}
+	
 	public Course(int courseId, String courseName, String courseDepartment) {
 		super();
 		this.courseId = courseId;
 		this.courseName = courseName;
 		this.courseDepartment = courseDepartment;
 	}
+	
+	
 	
 	
 

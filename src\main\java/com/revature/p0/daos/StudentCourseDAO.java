@@ -98,7 +98,9 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 		return null;
 	}
 	
-	// find all the courses that a particular student is registered for
+	
+	
+	// find all the courses that a particular student is registered for, it returns a list of the studentCourseInstances
 	public List<StudentCourseInstance> findAllRegisteredCourses(int studentID){
 		// if the student is valid, and authenticated. include some functionality for that first
 		List<StudentCourseInstance> listSCI = new ArrayList<>();
@@ -125,6 +127,8 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 		}
 		return null;
 	}
+	
+	
 	
 	
 	@Override

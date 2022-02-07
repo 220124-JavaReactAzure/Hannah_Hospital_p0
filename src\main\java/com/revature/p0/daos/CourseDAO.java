@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import com.revature.p0.exceptions.AuthenticationException;
 import com.revature.p0.models.Course;
+import com.revature.p0.models.StudentCourseInstance;
 import com.revature.p0.models.User;
 import com.revature.p0.util.collections.ArrayList;
 import com.revature.p0.util.collections.List;
@@ -173,6 +174,35 @@ public class CourseDAO implements CrudDAO<Course> {
 		}
 
 		return null;
+	}
+	
+	// create a method that given a list of StudentCourseInstance, is a
+	// ultimately, the goal of this method is to put the names of each course that the student is registered for
+	// in some kind of list, so that I can print it to console in StudentServices
+	// IDK about this
+	public List<Course> findAllRegisteredCoursesForStudent(int studentID){
+		List<Course> courses = new ArrayList<>();
+		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+			String sql = "studentcourserecords inner join registrationcatalog on course_name where student_id = ? ; ";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, studentID);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Course course = new Course();
+				course.setCourseName(rs.getString("course_name"));
+				courses.add(course);
+				
+			}
+			return courses;
+			
+			
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+		
 	}
 	
 	

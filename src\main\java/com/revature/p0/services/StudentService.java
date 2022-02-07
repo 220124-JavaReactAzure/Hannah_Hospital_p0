@@ -40,9 +40,7 @@ public class StudentService {
 		boolean usernameAvailable = userDAO.findByUsernameAndType(newUser.getUserName(), newUser.getType()) == null;
 
 		if (!usernameAvailable) {
-			if (!usernameAvailable) {
 				throw new ResourcePersistenceException("The provided username was already taken in the database");
-			}
 		}
 
 		boolean persistenceResult = userDAO.create(newUser);
@@ -120,12 +118,10 @@ public class StudentService {
 		List<StudentCourseInstance> myListSCI = studentCourseDAO.findAllRegisteredCourses(studentID);
 		if(myListSCI.size() > 0) {
 			System.out.println("These are the courses that you are registered for: ");
-		for(int i =0; i< myListSCI.size(); i++) {
-			// i did not include the course_name in my studentcourserecords, think of a way to gather that info
-			// think of a way to grab the course_name from registrationcatalog given the student_id which can 
-			//allow you to grab the course_id which you can then use to grab the course_name from registrationcatalog
-			String result = "";
-		}
+			List<Course> registeredCourses = courseDAO.findAllRegisteredCoursesForStudent(studentID);
+			for(int i = 0; i< registeredCourses.size(); i++) {
+				System.out.println(registeredCourses.get(i).getCourseName());
+			}
 		}
 		else {
 			System.out.println("You are not currently registered for any courses.");
