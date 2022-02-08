@@ -42,8 +42,26 @@ public class FacultyService {
 	public List<User> getAllFaculty() {
 		return userDAO.findAll("faculty");
 	}
+	
+	
+	public boolean validateUser(String userName, String passWord) {
+		String type = getSessionUser().getType();
+		if(type == "faculty") {
+			boolean result = userDAO.validateUser(userName, passWord, type);
+			return result;
+		}
+		else {
+			throw new AuthenticationException("You are not a faculty member, you do not have the permissions.");
+		}
+		
+	}
+	
+	
+	
+	
 
-	public boolean authenticateFaculty(String username, String password) {
+	// what am I doing????
+	public void authenticateFaculty(String username, String password) {
 
 		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
 			throw new InvalidRequestException(
@@ -57,8 +75,10 @@ public class FacultyService {
 					"Unauthenticated user, information provided was not found in our database.");
 		}
 		sessionUser = authenticatedUser;
-		return true;
+//		return true;
 	}
+	
+	
 
 	public boolean isUserValid(User newUser) {
 		if (newUser == null)
@@ -117,8 +137,7 @@ public class FacultyService {
 	// should also unregister all registered students for this course in {}
 	public boolean removeCourse(Course courseToRemove) {
 		// first ensure that the sessionUser is a faculty member, you must authenticate
-		// them
-		boolean authenticationResult = this.authenticateFaculty(sessionUser.getUserName(), sessionUser.getPassword());
+		boolean authenticationResult = userDAO.validateUser(sessionUser.getUserName(), sessionUser.getPassword(), sessionUser.getType());
 		if (authenticationResult) {
 			int courseID = courseToRemove.getCourseId();
 			boolean courseDeletionResult = courseDAO.delete(courseID);
@@ -126,8 +145,7 @@ public class FacultyService {
 				throw new ResourcePersistenceException(
 						"This course was not able to be removed from the Course Registration Catalog. ");
 			}
-			// now, remove all student/course registration instances from the
-			// studentcourserecords table
+			// now, remove all student/course registration instances from the studentcourserecords table
 			int courseIdValue = courseToRemove.getCourseId();
 			boolean studentCourseDeletionResult = studentCourseDAO.delete(courseIdValue);
 			if (studentCourseDeletionResult) {

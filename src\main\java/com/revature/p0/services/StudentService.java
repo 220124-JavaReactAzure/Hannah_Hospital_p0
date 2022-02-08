@@ -23,7 +23,12 @@ public class StudentService {
 	private final StudentCourseDAO studentCourseDAO;
 	private final CourseDAO courseDAO;
 	private User sessionUser;
+	
+	// This will be the tracker for assigning students an ID that is different from the others. 
+	// Every time a student is successfully registered in the student catalog, I will increase it by 1
+	private static int studentIdTracker = 0;
 
+	
 	public StudentService(UserDAO userDAO,CourseDAO courseDAO, StudentCourseDAO studentCourseDAO) {
 		this.userDAO = userDAO;
 		this.courseDAO = courseDAO;
@@ -50,6 +55,7 @@ public class StudentService {
 		boolean persistenceResult = userDAO.create(newUser);
 		if (persistenceResult) {
 			User persistedUser = newUser;
+			
 
 			return persistedUser;
 		}
@@ -170,6 +176,8 @@ public class StudentService {
 		return userDAO.findAll("student");
 	}
 
+	
+
 	public void authenticateStudents(String username, String password) {
 
 		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
@@ -198,6 +206,12 @@ public class StudentService {
 		return newUser.getPassword() != null || !newUser.getPassword().trim().equals("");
 
 	}
+	
+	public boolean validateUser(String userName, String passWord) {
+		boolean result = userDAO.validateUser(userName, passWord, "student");
+		return result;
+	}
+	
 
 	public void logout() {
 		sessionUser = null;

@@ -33,8 +33,7 @@ public class FacultyLoginMenu extends Menu {
 	     // Implement an authentication and successful login:
 	     
 	     try {
-	    	 
-	    	 boolean result = facultyService.authenticateFaculty(username, password);
+	    	 boolean result = facultyService.validateUser(username, password);
 	    	 if(result) {
 	    		 menuRouter.transfer("/FacultyDashboardMenu");
 	    	 }

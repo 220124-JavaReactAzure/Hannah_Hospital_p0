@@ -13,6 +13,54 @@ import com.revature.p0.exceptions.AuthenticationException;
 import com.revature.p0.models.*;
 
 public class UserDAO implements CrudDAO<User> {
+	
+	
+	// this should return a boolean for if the user exists in the database, and has inserted the correct information
+	// how do i check if the ResultSet gathered anything???
+	public boolean validateUser(String username, String password, String type) throws AuthenticationException {
+		
+		String sql = "";
+		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+			switch (type) {
+			case "student":
+				sql = "select * from students where username = ? and password = ?";
+				break;
+			case "faculty":
+				sql = "select * from faculty where username = ? and password = ?";
+				break;
+			default:
+				throw new AuthenticationException("You are neither a student nor a faculty member.");
+
+			}
+
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				String checkUsername = rs.getString(type + "_username");
+				String checkPassword = rs.getString(type + "_password");
+				if(checkUsername == username && checkPassword == password) {
+					return true;
+				}
+				else {
+					return false;
+				}
+				
+			}	
+			}
+		
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		}
+
+	
+	
+	
+	
 
 	// find the user from the database by username, password, and type(student/faculty)
 	public User findByUsernameAndPasswordAndType(String username, String password, String type)

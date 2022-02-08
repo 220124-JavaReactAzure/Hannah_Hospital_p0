@@ -29,6 +29,19 @@ public class User {
 	
 	
 	
+//	// this is creating a student, without the student Id, since I want to generate the student ID for them 
+//	public User(String type, String firstName, String lastName, String userName, String password) {
+//		super();
+//		this.type = type;
+//		this.firstName = firstName;
+//		this.lastName = lastName;
+//		this.userName = userName;
+//		this.password = password;
+//	}
+	
+	
+	
+	
 
 	public User(String type, int iD, String firstName, String lastName, String userName, String password) {
 		super();
