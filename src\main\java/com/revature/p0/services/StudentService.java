@@ -26,7 +26,8 @@ public class StudentService {
 	
 	// This will be the tracker for assigning students an ID that is different from the others. 
 	// Every time a student is successfully registered in the student catalog, I will increase it by 1
-	private static int studentIdTracker = 0;
+//	private static int studentIdTracker = 0;
+	// Idk I left it in the RegisterStudentMenu?? is that a bad place to put it.
 
 	
 	public StudentService(UserDAO userDAO,CourseDAO courseDAO, StudentCourseDAO studentCourseDAO) {
@@ -97,6 +98,12 @@ public class StudentService {
 			return sci;
 		}
 	}
+	
+	
+//	// this creates a studentCourseInstance, so that the student can then register for a course
+//	public StudentCourseInstance createStudentCourseInstance(int courseID) {
+//		StudentCourseInstance = new StudentCourseInstance()
+//	}
 	
 	
 	

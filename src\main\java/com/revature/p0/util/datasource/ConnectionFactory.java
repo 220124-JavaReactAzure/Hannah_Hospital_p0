@@ -27,6 +27,7 @@ package com.revature.p0.util.datasource;
 			
 			// Using .properties for DB credentials (this is to obfuscate)
 			try {
+				// what is this????
 				prop.load(new FileReader("src/main/resources/db.properties"));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -45,6 +46,7 @@ package com.revature.p0.util.datasource;
 			Connection conn = null;
 
 			try {
+				// I need to put this info in some db.properties file
 				conn = DriverManager.getConnection(prop.getProperty("url"),prop.getProperty("admin"),prop.getProperty("password"));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

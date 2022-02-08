@@ -28,19 +28,21 @@ public class StudentLoginMenu extends Menu {
 	     System.out.print("Password: ");
 	     String password = bufferedReader.readLine();
 
+	     
 	     // Test for a select all
 //	     List<Scientist> test = scientistService.getAllScientists();
 //	     System.out.println(test.get(0));
 	     // Implement an authentication and successful login:
 	     
+	     
 	     try {
-	    	 boolean result = studentService.validateUser(username, password, "student");
+	    	 boolean result = studentService.validateUser(username, password);
 	    	 if(result) {
-	    		 menuRouter.transfer("/FacultyDashboardMenu");
+	    		 menuRouter.transfer("/StudentDashboardMenu");
 
 	    	 }
 	    	 else {
-	    		 System.out.println("You are not an authenticated faculty member. Routing you back to the Welcome Menu...");
+	    		 System.out.println("You are not an authenticated student. Routing you back to the Welcome Menu...");
 	    		 menuRouter.transfer("/welcome");
 	    	 }
 	    	 

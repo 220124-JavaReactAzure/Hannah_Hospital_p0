@@ -7,6 +7,12 @@ import com.revature.p0.daos.CourseDAO;
 import com.revature.p0.daos.StudentCourseDAO;
 import com.revature.p0.daos.UserDAO;
 import com.revature.p0.logging.Logger;
+import com.revature.p0.menus.dashboardMenus.FacultyDashboardMenu;
+import com.revature.p0.menus.dashboardMenus.StudentDashboardMenu;
+import com.revature.p0.menus.startPages.FacultyLoginMenu;
+import com.revature.p0.menus.startPages.RegisterStudentMenu;
+import com.revature.p0.menus.startPages.StudentLoginMenu;
+import com.revature.p0.menus.startPages.WelcomeMenu;
 import com.revature.p0.services.FacultyService;
 import com.revature.p0.services.StudentService;
 
@@ -15,7 +21,7 @@ public class AppState {
 
 	private final Logger logger;
 	private static boolean isRunning;
-	private final MenuRouter router;
+	private final MenuRouter menuRouter;
 	
 	public AppState() {
 		
@@ -23,8 +29,8 @@ public class AppState {
 		logger.log("Application  initiliazing...");
 		
 		isRunning = true;
-		router = new MenuRouter();
-		BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+		menuRouter = new MenuRouter();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		
 		UserDAO userDAO = new UserDAO();
 		CourseDAO courseDAO = new CourseDAO();
@@ -32,20 +38,19 @@ public class AppState {
 		StudentService studentService = new StudentService(userDAO, courseDAO, studentCourseDAO);
 		FacultyService facultyService = new FacultyService(userDAO, courseDAO, studentCourseDAO);
 		
-		router.addMenu(new WelcomeMenu(consoleReader, router));
-		router.addMenu(new RegisterMenu(consoleReader, router, scientistService));
-		router.addMenu(new LoginMenu(consoleReader, router, scientistService));
-		router.addMenu(new DashboardMenu(consoleReader, router, scientistService));
-		router.addMenu(new MonsterMenu(consoleReader, router));
-		router.addMenu(new MonsterCreationMenu(consoleReader, router, monsterService));
-		
+		menuRouter.addMenu(new WelcomeMenu(bufferedReader, menuRouter));
+		menuRouter.addMenu(new StudentLoginMenu(bufferedReader, menuRouter, studentService));
+		menuRouter.addMenu(new FacultyLoginMenu(bufferedReader, menuRouter, facultyService));
+		menuRouter.addMenu(new RegisterStudentMenu(bufferedReader, menuRouter, studentService));
+		menuRouter.addMenu(new FacultyDashboardMenu(bufferedReader, menuRouter, facultyService));
+		menuRouter.addMenu(new StudentDashboardMenu(bufferedReader, menuRouter, studentService));
 		logger.log("The application has been initialized.");
 	}
 	
 	public void startup() {
 		try {
 			while(isRunning) {
-				router.transfer("/welcome");
+				menuRouter.transfer("/welcome");
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

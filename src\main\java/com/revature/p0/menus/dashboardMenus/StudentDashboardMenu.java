@@ -14,6 +14,7 @@ import com.revature.p0.util.MenuRouter;
 public class StudentDashboardMenu extends Menu {
 
 		private final StudentService studentService;
+		private static int studentCourseInstanceIDTracker = 0;
 
 		public StudentDashboardMenu(BufferedReader bufferedReader, MenuRouter menuRouter, StudentService studentService) {
 			super("StudentDashboard", "/StudentDashboardMenu", bufferedReader, menuRouter);
@@ -33,6 +34,7 @@ public class StudentDashboardMenu extends Menu {
 
 			while (studentService.isSessionActive()) {
 				System.out.println("Welcome " + studentService.getSessionUser().getFirstName());
+				System.out.println("Read the instructions below, and type into the console what you wish to do.");
 				String menu = "1) View all classes available for registration\n" + 
 						"2) Register for an open and available class\n" +
 						"3) Cancel your registration for a class\n" + 
@@ -63,10 +65,13 @@ public class StudentDashboardMenu extends Menu {
 					System.out.println("Type into the console, the course ID of the class you wish to register for: ");
 					// will this casting work??
 					int courseID = (int) bufferedReader.read();
-					StudentCourseInstance sci = studentService.getStudentCourseInstance(courseID);
+					StudentCourseInstance sci = new StudentCourseInstance(courseID);
+					sci.setStudentId(sessionUser.getID());
+					sci.setStudentCourseId(studentCourseInstanceIDTracker);
 					boolean successfulRegistration = studentService.registerForCourse(sci);
 					if(successfulRegistration) {
 						System.out.println("You succcessfully registered for course: "+ courseID);
+						studentCourseInstanceIDTracker++;
 					}
 					else {
 						System.out.println("You were not able to successfully register for course: "+courseID);
@@ -78,7 +83,7 @@ public class StudentDashboardMenu extends Menu {
 					break;
 				case "3":
 					System.out.println("Cancel your registration for a class");
-					System.out.println("Type the course ID of course you would like to cancel your registration for.");
+					System.out.print("Type the course ID of course you would like to cancel your registration for: ");
 					int courseIdDelete = (int) bufferedReader.read();
 					StudentCourseInstance SCI = studentService.getStudentCourseInstance(courseIdDelete);
 					boolean deletionResult = studentService.cancelRegistration(SCI);
