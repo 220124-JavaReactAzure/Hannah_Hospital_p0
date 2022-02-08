@@ -27,9 +27,6 @@ public class Course {
 		this.courseDepartment = courseDepartment;
 	}
 	
-	
-	
-	
 
 	public Course(int courseId, String courseName, String courseDepartment, int availableSlots,
 			int totalStudentsInCourse) {

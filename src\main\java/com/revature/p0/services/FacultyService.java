@@ -23,6 +23,7 @@ public class FacultyService {
 		this.studentCourseDAO = studentCourseDAO;
 		this.sessionUser = null;
 	}
+	
 
 	public User getSessionUser() {
 		if (sessionUser.getType() == "faculty") {
@@ -31,12 +32,17 @@ public class FacultyService {
 		throw new AuthenticationException("You are not a faculty member.");
 
 	}
+	
+	public Course findCourseByCourseID(int courseID) {
+		Course course = courseDAO.findByIdAndType(courseID, "course");
+		return course;
+	}
+	
 
 	public List<User> getAllFaculty() {
 		return userDAO.findAll("faculty");
 	}
 
-	
 	public boolean authenticateFaculty(String username, String password) {
 
 		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
@@ -54,7 +60,6 @@ public class FacultyService {
 		return true;
 	}
 
-	
 	public boolean isUserValid(User newUser) {
 		if (newUser == null)
 			return false;
@@ -76,8 +81,7 @@ public class FacultyService {
 		return sessionUser != null;
 	}
 
-	
-	public Course registerNewCourse(Course newCourse) {
+	public boolean registerNewCourse(Course newCourse) {
 		// how do I prove that the faculty member has the right credentials, is this
 		// enough? I might possibly need more authentication
 		if (!isUserValid(sessionUser)) {
@@ -89,17 +93,26 @@ public class FacultyService {
 		if (persistenceResult) {
 			Course persistedCourse = newCourse;
 
-			return persistedCourse;
+			return true;
 		}
 
 		else {
-			throw new ResourcePersistenceException("The course could not be persisted.");
+			return false;
+//			throw new ResourcePersistenceException("The course could not be persisted.");
 		}
 
 	}
+	
+	public boolean updateCourse(Course courseToUpdate) {
+		boolean updateResult = courseDAO.update(courseToUpdate);
+		if(updateResult) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
-	
-	
 	// this functionality is for faculty to remove a course from the registrar, I
 	// should also unregister all registered students for this course in {}
 	public boolean removeCourse(Course courseToRemove) {
@@ -127,7 +140,6 @@ public class FacultyService {
 			throw new AuthenticationException("You are not an authenticated faculty member.");
 		}
 	}
-	
 	
 
 }
