@@ -47,14 +47,16 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 	@Override
 	public StudentCourseInstance findByIdAndType(int id, String type) {
 		// TODO Auto-generated method stub
+		// where id = the course ID
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-			String sql = "select * from studentcourserecords where student_course_id = ?";
+			String sql = "select * from studentcourserecords where course_id = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				StudentCourseInstance sci = new StudentCourseInstance(id);
+				StudentCourseInstance sci = new StudentCourseInstance();
+				sci.setStudentCourseId(rs.getInt("student_course_id"));
 				sci.setCourseId(rs.getInt("course_id"));
 				sci.setStudentId(rs.getInt("student_id"));
 				return sci;
@@ -161,13 +163,16 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 
 	}
 
+	
+	
+	// the goal of this method is to delete all records in studentcourserecords table that have a certain course_id
 	@Override
-	public boolean delete(int id, String type) {
+	public boolean delete(int ID) {
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 			String sql = "delete from studentcourserecords where student_course_id = ?;";
 
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, id);
+			pstmt.setInt(1, ID);
 
 			ResultSet rs = pstmt.executeQuery();
 			// this is to check if there were any rows affected, if successful return true
@@ -186,32 +191,6 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 		}
 		return false;
 
-	}
-	
-	// the goal of this method is to delete all records in studentcourserecords table that have a certain course_id
-	public boolean delete(int courseID) {
-		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-			String sql = "delete from studentcourserecords where course_id = ?;";
-
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, courseID);
-
-			ResultSet rs = pstmt.executeQuery();
-			// this is to check if there were any rows affected, if successful return true
-			// if not return false
-			int count = pstmt.executeUpdate();
-			if (count > 0) {
-				return true;
-			} else {
-				return false;
-			}
-
-		}
-
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 	
 

@@ -36,7 +36,7 @@ public class FacultyService {
 		return userDAO.findAll("faculty");
 	}
 
-	// TODO: Impelement authentication
+	
 	public boolean authenticateFaculty(String username, String password) {
 
 		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
@@ -54,6 +54,7 @@ public class FacultyService {
 		return true;
 	}
 
+	
 	public boolean isUserValid(User newUser) {
 		if (newUser == null)
 			return false;
@@ -75,6 +76,7 @@ public class FacultyService {
 		return sessionUser != null;
 	}
 
+	
 	public Course registerNewCourse(Course newCourse) {
 		// how do I prove that the faculty member has the right credentials, is this
 		// enough? I might possibly need more authentication
@@ -96,6 +98,8 @@ public class FacultyService {
 
 	}
 
+	
+	
 	// this functionality is for faculty to remove a course from the registrar, I
 	// should also unregister all registered students for this course in {}
 	public boolean removeCourse(Course courseToRemove) {
@@ -104,7 +108,7 @@ public class FacultyService {
 		boolean authenticationResult = this.authenticateFaculty(sessionUser.getUserName(), sessionUser.getPassword());
 		if (authenticationResult) {
 			int courseID = courseToRemove.getCourseId();
-			boolean courseDeletionResult = courseDAO.delete(courseID, "course");
+			boolean courseDeletionResult = courseDAO.delete(courseID);
 			if (!courseDeletionResult) {
 				throw new ResourcePersistenceException(
 						"This course was not able to be removed from the Course Registration Catalog. ");

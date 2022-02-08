@@ -42,6 +42,8 @@ public class CourseDAO implements CrudDAO<Course> {
 
 	}
 
+	
+	
 	// this is for faculty members to create a new course object and register it
 	// into the database
 	public boolean create(Course obj) {
@@ -74,6 +76,8 @@ public class CourseDAO implements CrudDAO<Course> {
 
 	}
 
+	
+	
 	// this is used to update a record in the registrationcatalog given the updated
 	// object
 	// since the course_id is the primary key, it will be the factor to determine
@@ -111,6 +115,9 @@ public class CourseDAO implements CrudDAO<Course> {
 
 	}
 
+	
+	
+	// I guess this function would be for teachers to look at all courses on the registrationcatalog, even ones that have no available slots
 	public List<Course> findAll(String type) {
 
 		List<Course> courseList = new ArrayList<>();
@@ -142,14 +149,16 @@ public class CourseDAO implements CrudDAO<Course> {
 		return null;
 	}
 	
-	// this function will return all courses that are available 
+	
+	
+	
+	// this function will return all courses that are available, where available slots > 0
 	public List<Course> findAllAvailableCourses() {
 
 		List<Course> courseList = new ArrayList<>();
 
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-			// maybe somehow include functionality to only include courses that have available_slots > 0
-			// is this the correct SQL syntax? for multiple where clauses
+
 			String sql = "select * from registrationcatalog where available_slots > 0 ;";
 			Statement s = (Statement) conn.createStatement();
 
@@ -176,10 +185,11 @@ public class CourseDAO implements CrudDAO<Course> {
 		return null;
 	}
 	
-	// create a method that given a list of StudentCourseInstance, is a
-	// ultimately, the goal of this method is to put the names of each course that the student is registered for
-	// in some kind of list, so that I can print it to console in StudentServices
-	// IDK about this
+	
+	
+	
+
+	// this method, given the studentID, returns a list of all of the courses that the student is registered for
 	public List<Course> findAllRegisteredCoursesForStudent(int studentID){
 		List<Course> courses = new ArrayList<>();
 		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
@@ -204,6 +214,7 @@ public class CourseDAO implements CrudDAO<Course> {
 		
 		
 	}
+	
 	
 	
 	// create a function that will return a boolean and tell you if a course, given a course_id, is available or see if it has any open slots
@@ -233,13 +244,15 @@ public class CourseDAO implements CrudDAO<Course> {
 	
 	
 
+	
 	// make sure that all students registered for said deleted course, get unregistered for the course in the studentcourserecords
-	public boolean delete(int id, String type) {
+	public boolean delete(int courseID) {
+	
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 			String sql = "delete from registrationcatalog where course_id = ?;";
 
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, id);
+			pstmt.setInt(1, courseID);
 
 			ResultSet rs = pstmt.executeQuery();
 			// this is to check if there were any rows affected, if successful return true
@@ -257,7 +270,7 @@ public class CourseDAO implements CrudDAO<Course> {
 			e.printStackTrace();
 		}
 		return false;
+		}
 
 	}
 
-}

@@ -1,5 +1,10 @@
 package com.revature.p0.services;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.revature.p0.daos.CourseDAO;
 import com.revature.p0.daos.StudentCourseDAO;
 import com.revature.p0.daos.UserDAO;
@@ -10,6 +15,7 @@ import com.revature.p0.models.Course;
 import com.revature.p0.models.StudentCourseInstance;
 import com.revature.p0.models.User;
 import com.revature.p0.util.collections.List;
+import com.revature.p0.util.datasource.ConnectionFactory;
 
 public class StudentService {
 
@@ -18,10 +24,10 @@ public class StudentService {
 	private final CourseDAO courseDAO;
 	private User sessionUser;
 
-	public StudentService(UserDAO userDAO, StudentCourseDAO studentCourseDAO, CourseDAO courseDAO) {
+	public StudentService(UserDAO userDAO,CourseDAO courseDAO, StudentCourseDAO studentCourseDAO) {
 		this.userDAO = userDAO;
-		this.studentCourseDAO = studentCourseDAO;
 		this.courseDAO = courseDAO;
+		this.studentCourseDAO = studentCourseDAO;
 		this.sessionUser = null;
 
 	}
@@ -30,8 +36,6 @@ public class StudentService {
 		return sessionUser;
 	}
 
-	// this method is only to register new students, NOT faculty, I will figure out
-	// that implementation later
 	public User registerNewStudent(User newUser) {
 		if (!isUserValid(newUser)) {
 			throw new InvalidRequestException("Invalid user data provider");
@@ -56,11 +60,6 @@ public class StudentService {
 
 	}
 
-// I NEED ALL THIS FUNCTIONALITY
-// view all available courses: done
-//	 register for an open and available class : done
-//	 cancel my registration for a class (if within window)
-//	 view the classes that I have registered for
 
 	public void viewAvailableCourses() {
 		// if the student is valid and a registered student, they can access this
@@ -82,9 +81,25 @@ public class StudentService {
 
 	}
 	
+	// returns the SCI from the SCDAO, which will connect to db
+	public StudentCourseInstance getStudentCourseInstance(int courseID) {
+		StudentCourseInstance sci = studentCourseDAO.findByIdAndType(courseID, "course");
+		if(sci == null) {
+			throw new InvalidRequestException("The student is not registered for this course.");
+		}
+		else {
+			return sci;
+		}
+	}
+	
+	
+	
+	
+	
 	public boolean registerForCourse(StudentCourseInstance sci) {
 		boolean isAvailable = courseDAO.isCourseAvailable(sci.getCourseId());
 		if(isAvailable) {
+			
 			boolean studentCourseSuccess = studentCourseDAO.create(sci);
 			if(studentCourseSuccess) {
 				return true;
@@ -99,6 +114,8 @@ public class StudentService {
 		
 	}
 	
+	
+	
 	// to cancel your registration for a certain course
 	// should I include some functionality to make sure that the sci is authenticated and valid??
 	public boolean cancelRegistration(StudentCourseInstance sci) {
@@ -112,9 +129,28 @@ public class StudentService {
 		}
 	}
 	
-	// to view all of the courses that you registered for
+	
+	
+	// to view all of the courses that the current session user is registered for
 	public void viewMyRegisteredCourses() {
 		int studentID = sessionUser.getID();
+		List<StudentCourseInstance> myListSCI = studentCourseDAO.findAllRegisteredCourses(studentID);
+		if(myListSCI.size() > 0) {
+			System.out.println("These are the courses that you are registered for: ");
+			List<Course> registeredCourses = courseDAO.findAllRegisteredCoursesForStudent(studentID);
+			for(int i = 0; i< registeredCourses.size(); i++) {
+				System.out.println(registeredCourses.get(i).getCourseName());
+			}
+		}
+		else {
+			System.out.println("You are not currently registered for any courses.");
+		}
+		
+	}
+	
+	
+	public void viewMyRegisteredCourses(int studentID) {
+//		int studentID = sessionUser.getID();
 		List<StudentCourseInstance> myListSCI = studentCourseDAO.findAllRegisteredCourses(studentID);
 		if(myListSCI.size() > 0) {
 			System.out.println("These are the courses that you are registered for: ");
@@ -134,7 +170,6 @@ public class StudentService {
 		return userDAO.findAll("student");
 	}
 
-	// TODO: Impelement authentication
 	public void authenticateStudents(String username, String password) {
 
 		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {

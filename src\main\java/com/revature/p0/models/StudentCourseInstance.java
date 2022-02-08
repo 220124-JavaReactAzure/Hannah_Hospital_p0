@@ -7,9 +7,9 @@ public class StudentCourseInstance {
 	private int courseId;
 	
 	
-	public StudentCourseInstance(int studentCourseId) {
+	public StudentCourseInstance(int courseId) {
 		super();
-		this.studentCourseId = studentCourseId;
+		this.courseId = courseId;
 	}
 
 	public StudentCourseInstance() {

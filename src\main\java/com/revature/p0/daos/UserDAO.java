@@ -340,8 +340,9 @@ public class UserDAO implements CrudDAO<User> {
 	
 
 	@Override
-	public boolean delete(int ID, String type) {
+	public boolean delete(int userID) {
 		// TODO Auto-generated method stub
+		
 		
 		
 		
