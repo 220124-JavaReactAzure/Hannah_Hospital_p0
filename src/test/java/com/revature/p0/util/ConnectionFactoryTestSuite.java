@@ -5,7 +5,7 @@ import java.sql.Connection;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.revature.monster_lab.util.datasource.ConnectionFactory;
+import com.revature.p0.util.datasource.ConnectionFactory;
 
 public class ConnectionFactoryTestSuite {
 
@@ -18,4 +18,5 @@ public class ConnectionFactoryTestSuite {
 			e.printStackTrace();
 		}
 	}
+}
 	

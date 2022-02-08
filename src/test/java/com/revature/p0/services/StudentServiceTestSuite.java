@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,7 +76,7 @@ public class StudentServiceTestSuite {
 		User validUser = new User("valid",0,"valid","valid","valid","valid");
 		when(mockUserDAO.findByUsernameAndType(validUser.getUserName(), validUser.getType())).thenReturn(null);
 		when(mockUserDAO.findByUsernameAndPasswordAndType(validUser.getUserName(), validUser.getPassword(), validUser.getType())).thenReturn(null);
-		when(mockUserDAO.create(validUser)).thenReturn(validUser);
+		when(mockUserDAO.create(validUser)).thenReturn(true);
 		
 		// Act
 		User actualResult = sut.registerNewStudent(validUser);
@@ -100,7 +101,7 @@ public class StudentServiceTestSuite {
 		User usernameTakenUser = new User("valid",0,"valid","valid","valid","valid");
 		when(mockUserDAO.findByUsernameAndType(usernameTakenUser.getUserName(), usernameTakenUser.getType())).thenReturn(usernameTakenUser);
 		when(mockUserDAO.findByUsernameAndPasswordAndType(usernameTakenUser.getUserName(),usernameTakenUser.getPassword(), usernameTakenUser.getType() )).thenReturn(null);
-		when(mockUserDAO.create(usernameTakenUser)).thenReturn(usernameTakenUser);
+		when(mockUserDAO.create(usernameTakenUser)).thenReturn(true);
 		
 		// Act
 		try {
