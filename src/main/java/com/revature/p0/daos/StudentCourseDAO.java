@@ -85,9 +85,8 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 			String sql = "select * from studentcourserecords";
-			Statement s = (Statement) conn.createStatement();
-
-			ResultSet resultSet = ((java.sql.Statement) s).executeQuery(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ResultSet resultSet = pstmt.executeQuery();
 
 			while (resultSet.next()) {
 				StudentCourseInstance sci = new StudentCourseInstance();

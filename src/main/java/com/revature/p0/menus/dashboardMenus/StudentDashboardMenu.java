@@ -14,7 +14,7 @@ import com.revature.p0.util.MenuRouter;
 public class StudentDashboardMenu extends Menu {
 
 		private final StudentService studentService;
-		private static int studentCourseInstanceIDTracker = 100;
+//		private static int studentCourseInstanceIDTracker = 100;
 
 		public StudentDashboardMenu(BufferedReader bufferedReader, MenuRouter menuRouter, StudentService studentService) {
 			super("StudentDashboard", "/StudentDashboardMenu", bufferedReader, menuRouter);
@@ -63,10 +63,13 @@ public class StudentDashboardMenu extends Menu {
 					int courseID = Integer.parseInt(courseId);
 					StudentCourseInstance sci = new StudentCourseInstance(courseID);
 					sci.setStudentId(sessionUser.getID());
+					int studentCourseInstanceIDTracker = studentService.getAllStudentCourseRecords();
+					System.out.println(studentCourseInstanceIDTracker);
+					sci.setCourseId(courseID);
 					sci.setStudentCourseId(studentCourseInstanceIDTracker);
 					studentService.registerForCourse(sci);
 					System.out.println("You succcessfully registered for course: "+ courseID);
-					studentCourseInstanceIDTracker++;
+//					studentCourseInstanceIDTracker++;
 
 					break;
 				case "3":

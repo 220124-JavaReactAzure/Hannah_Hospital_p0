@@ -36,6 +36,34 @@ public class StudentService {
 	public User getSessionUser() {
 		return sessionUser;
 	}
+	
+	
+	public int getNextStudentId() {
+		List<User> allStudents = userDAO.findAll("student");
+		int starterIndex = 0;
+		for(int i = 0; i<allStudents.size(); i++) {
+			User currentUser = allStudents.get(i);
+			if(currentUser.getID()>starterIndex) {
+				starterIndex = currentUser.getID();
+			}
+		}
+		return starterIndex + 1;
+	}
+	
+	
+	public int getAllStudentCourseRecords() {
+		List<StudentCourseInstance> allInstances = studentCourseDAO.findAll("courseStudentInstances");
+		int starterIndex = 0;
+		for(int i = 0; i<allInstances.size(); i++) {
+			StudentCourseInstance sci = allInstances.get(i);
+			if(sci.getStudentCourseId()>starterIndex) {
+				starterIndex = sci.getStudentCourseId();
+			}
+		}
+		return starterIndex + 1;
+	}
+	
+	
 
 	public User registerNewStudent(User newUser) {
 		if (!isUserValid(newUser)) {

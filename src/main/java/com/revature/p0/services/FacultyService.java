@@ -7,6 +7,7 @@ import com.revature.p0.exceptions.AuthenticationException;
 import com.revature.p0.exceptions.InvalidRequestException;
 import com.revature.p0.exceptions.ResourcePersistenceException;
 import com.revature.p0.models.Course;
+import com.revature.p0.models.StudentCourseInstance;
 import com.revature.p0.models.User;
 import com.revature.p0.util.collections.List;
 
@@ -86,6 +87,8 @@ public class FacultyService {
 	public boolean isSessionActive() {
 		return sessionUser != null;
 	}
+	
+
 
 	
 	public void registerNewCourse(Course newCourse) {

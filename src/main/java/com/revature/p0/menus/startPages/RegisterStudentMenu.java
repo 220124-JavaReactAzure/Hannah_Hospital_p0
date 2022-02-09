@@ -12,7 +12,10 @@ import com.revature.p0.util.MenuRouter;
 public class RegisterStudentMenu extends Menu {
 
 	private final StudentService studentService;
-	private static int studentIdTracker = 10;
+	// maybe try puting the studentIdTracker somewhere in a global place? try the Menu? or something else where it can be stored and won't reset.
+	// or maybe have a way to store the previous studentId? and the current one
+	
+//	private static int studentIdTracker = 10;
 
 	public RegisterStudentMenu(BufferedReader bufferedReader, MenuRouter menuRouter, StudentService studentService) {
 		super("RegisterStudent", "/RegisterStudentMenu", bufferedReader, menuRouter);
@@ -23,7 +26,10 @@ public class RegisterStudentMenu extends Menu {
 	public void renderMenu(){
 		try {
 		 System.out.println("Welcome to the student registration page.");
-		 int studentID = studentIdTracker;
+//		 int studentID = studentIdTracker;
+		 int studentID = studentService.getNextStudentId();
+		 System.out.println(studentID);
+		 
 		 System.out.println("Please provide us with some information about yourself.");
 	     System.out.print("First name: ");
 	     String firstName = bufferedReader.readLine();
@@ -36,7 +42,7 @@ public class RegisterStudentMenu extends Menu {
 	     User user = new User("student", studentID, firstName, lastName, userName, passWord);
 	     User newUser = studentService.registerNewStudent(user);
 	     if(user.getID() == newUser.getID()) {
-	    	 studentIdTracker++;
+//	    	 studentIdTracker++;
 		     System.out.println("You have successfully been registered as a student!");
 		     System.out.println("Routing you back to the login menu...");
 		     menuRouter.transfer("/StudentLoginMenu");

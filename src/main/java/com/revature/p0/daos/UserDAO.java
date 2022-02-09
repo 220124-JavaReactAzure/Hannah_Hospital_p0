@@ -145,7 +145,7 @@ public class UserDAO implements CrudDAO<User> {
 	
 	
 	
-	
+	// to grab all of the students/faculty that are currently registered
 	@Override
 	public List<User> findAll(String type){
 		List<User> userList = new ArrayList<>();
@@ -160,12 +160,12 @@ public class UserDAO implements CrudDAO<User> {
 				sql = "select * from faculty";
 				break;
 			}
-			
-			Statement s = (Statement) conn.createStatement();
-			ResultSet resultSet = ((java.sql.Statement) s).executeQuery(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ResultSet resultSet = pstmt.executeQuery();
+//			Statement s = (Statement) conn.createStatement();
+//			ResultSet resultSet = ((java.sql.Statement) s).executeQuery(sql);
 
 			while (resultSet.next()) {
-				// idk if I did this part correctly
 				User user = new User(type);
 				user.setID(resultSet.getInt(type+ "_id"));
 				user.setFirstName(resultSet.getString(type+ "_first_name"));
