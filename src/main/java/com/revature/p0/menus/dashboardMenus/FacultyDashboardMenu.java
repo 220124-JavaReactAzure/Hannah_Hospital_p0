@@ -20,7 +20,6 @@ public class FacultyDashboardMenu extends Menu {
 
 		@Override
 		public void renderMenu(){
-
 			User sessionUser = facultyService.getSessionUser();
 
 			if (sessionUser == null) {
@@ -46,25 +45,19 @@ public class FacultyDashboardMenu extends Menu {
 				switch (userSelection) {
 				case "1":
 					System.out.println("Add new classes to the Registration Catalog");
-					// how can I be sure that the course_id or info the faculty member is providing, has not already been taken
 					System.out.println("Please answer the following questions about the course you wish to add to the Registration Catalog.");
-					System.out.println("What is the Course ID?");
-					int courseID = (int) bufferedReader.read();
+					System.out.println("What is the Course ID?");	
+					String courseId = bufferedReader.readLine();
+					int courseID = Integer.parseInt(courseId);
 					System.out.println("What is the Course Name?");
 					String courseName = bufferedReader.readLine();
 					System.out.println("What is the Course Department?");
 					String courseDepartment = bufferedReader.readLine();
 					// set the default of availableSlots to 50, and since the faculty member is creating a new course, the total_students =0
 					Course course = new Course(courseID, courseName, courseDepartment, 50, 0);
-					boolean registrationResult = facultyService.registerNewCourse(course);
-					if(registrationResult) {
-						System.out.println("You successfully registered the course: "+courseID);
-					}
-					else {
-						System.out.println("There was a problem with registering a new course.");
-						// should I then transfer to a different menu??
-					}
-//					menuRouter.transfer("/FacultyRegistrationMenu");
+					facultyService.registerNewCourse(course);
+					System.out.println("You successfully registered the course of course ID: "+courseID);
+			
 					break;
 					
 					
@@ -72,8 +65,8 @@ public class FacultyDashboardMenu extends Menu {
 					// I am only accounting for one change to the course details to be made as of now.
 					System.out.println("Change/Update the registration details for a course");
 					System.out.println("Enter the course ID of the course you'd like to update: ");
-					int courseIdUpdate = (int)bufferedReader.read();
-					// render the course object with this id
+					String courseIDUpdate = bufferedReader.readLine();
+					int courseIdUpdate = Integer.parseInt(courseIDUpdate);
 					Course courseToUpdate = facultyService.findCourseByCourseID(courseIdUpdate);
 					System.out.println("Which aspect of the course would you like to change? \n \1.Course Name\n \2.Course Department\n \3.Available Slots\n \4.Total Students in Course ");
 					String userChoice = bufferedReader.readLine();
@@ -101,11 +94,9 @@ public class FacultyDashboardMenu extends Menu {
 					default:
 						System.out.println("You did not enter valid information for updating the course.");
 						break;
-						// throw some kind of exception, such that it does not reach the code below
 					
 					
 					}
-					// once we have the new course
 					Course updatedCourse = courseToUpdate;
 					boolean updateResult = facultyService.updateCourse(courseToUpdate);
 					if(updateResult) {
@@ -114,26 +105,20 @@ public class FacultyDashboardMenu extends Menu {
 					else {
 						System.out.println("The course was not successfully updated.");
 					}
-
-//					menuRouter.transfer("/UpdateRegistrationMenu");
 					break;
 					
 					
 				case "3":
 					System.out.println("Remove a class from the registration catalog:");
 					System.out.println("Enter the Course Id of the course you'd wish to remove: ");
-					int courseRemoveId = (int)bufferedReader.read();
-					Course courseToRemove = facultyService.findCourseByCourseID(courseRemoveId);
-					boolean removeResult = facultyService.removeCourse(courseToRemove);
-					if(removeResult) {
-						System.out.println("The course was successfully removed from the Registration Catalog.");
-					}
+					String courseRemoveID = bufferedReader.readLine();
+					int courseRemoveId = Integer.parseInt(courseRemoveID);
+					Course courseToRemove = facultyService.findCourseByCourseID(courseRemoveId);	
+					//problem is here
+//					boolean removeResult = facultyService.removeCourse(courseToRemove);
+					facultyService.removeCourse(courseToRemove);
+
 					
-					else {
-						System.out.println("The course was not successfully removed from the Registration Catalog.");
-					}
-					
-//					menuRouter.transfer("/RemoveFromRegistrationCatalogMenu");
 					break;
 					
 					

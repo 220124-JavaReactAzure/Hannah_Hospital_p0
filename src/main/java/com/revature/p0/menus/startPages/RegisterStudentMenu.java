@@ -12,7 +12,7 @@ import com.revature.p0.util.MenuRouter;
 public class RegisterStudentMenu extends Menu {
 
 	private final StudentService studentService;
-	private static int studentIdTracker = 2;
+	private static int studentIdTracker = 10;
 
 	public RegisterStudentMenu(BufferedReader bufferedReader, MenuRouter menuRouter, StudentService studentService) {
 		super("RegisterStudent", "/RegisterStudentMenu", bufferedReader, menuRouter);

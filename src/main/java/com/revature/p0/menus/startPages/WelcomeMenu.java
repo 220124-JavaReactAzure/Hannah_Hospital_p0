@@ -17,8 +17,11 @@ public class WelcomeMenu extends Menu{
 
 	@Override
 	public void renderMenu(){
-		System.out.println("Welcome to the Course Registration Page!\n\" + \"1) Login as a registered student\\n\" + \"2) Login as a registered faculty member\\n\" + \"3) Register as a new student\\n\"+ \"4) Exits Application\\n\" + \">");
-		
+		System.out.println("Welcome to the Course Registration Page! Please enter into the console, the corrresponding instruction.");
+		System.out.println("1) Login as a registered student");
+		System.out.println("2) Login as a registered faculty member");
+		System.out.println("3) Register as a new student");
+		System.out.println("4) Exit Application");
 		try {
 		
 		String userSelection = bufferedReader.readLine();

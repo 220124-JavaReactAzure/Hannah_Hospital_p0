@@ -26,7 +26,7 @@ public class Logger {
 	}
 	
 	public void log(String message) {
-		try(Writer logWriter = new FileWriter("src/main/resources/monster-lab.log", true);) {
+		try(Writer logWriter = new FileWriter("resources/hannah-p0.log", true);) {
 		
 			logWriter.write(message + "\n");
 			

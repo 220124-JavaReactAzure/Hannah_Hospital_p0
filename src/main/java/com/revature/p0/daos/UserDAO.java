@@ -39,9 +39,7 @@ public class UserDAO implements CrudDAO<User> {
 			
 			while(rs.next()) {
 				String checkUsername = rs.getString(type + "_username");
-				System.out.println(checkUsername);
 				String checkPassword = rs.getString(type + "_password");
-				System.out.println(checkPassword);
 				if(checkUsername.equals(username) && checkPassword.equals(password)) {
 					return true;
 				}

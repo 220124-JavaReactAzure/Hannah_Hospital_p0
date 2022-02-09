@@ -178,7 +178,7 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 	@Override
 	public boolean delete(int ID) {
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-			String sql = "delete from studentcourserecords where student_course_id = ?;";
+			String sql = "delete from studentcourserecords where student_course_id = ?";
 
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, ID);

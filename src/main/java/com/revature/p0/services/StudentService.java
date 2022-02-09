@@ -204,6 +204,9 @@ public class StudentService {
 		sessionUser = authenticatedUser;
 	}
 
+	
+	
+	
 	public boolean isUserValid(User newUser) {
 		if (newUser == null)
 			return false;

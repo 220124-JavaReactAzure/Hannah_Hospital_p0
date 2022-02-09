@@ -20,7 +20,7 @@ public class CourseDAO implements CrudDAO<Course> {
 	// course object containing all the info from the table
 	public Course findByIdAndType(int courseId, String type) {
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-			String sql = "select * from registrationCatalog where course_id = ?";
+			String sql = "select * from registrationcatalog where course_id = ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, courseId);
 			ResultSet rs = ps.executeQuery();
@@ -29,7 +29,7 @@ public class CourseDAO implements CrudDAO<Course> {
 				Course course = new Course(courseId);
 				course.setCourseName(rs.getString("course_name"));
 				course.setCourseDepartment(rs.getString("course_department"));
-				course.setAvailableSlots(rs.getInt("available_slot"));
+				course.setAvailableSlots(rs.getInt("available_slots"));
 				course.setTotalStudentsInCourse(rs.getInt("total_students_in_course"));
 
 				return course;
@@ -41,40 +41,30 @@ public class CourseDAO implements CrudDAO<Course> {
 		return null;
 
 	}
+@Override
+public void create(Course obj) {
+	System.out.println("Hi");
+}
 
-	
-	
-	// this is for faculty members to create a new course object and register it
-	// into the database
-	public boolean create(Course obj) {
+// this is for faculty members to create a new course object and register it
+// into the database
+public void createRecord(Course obj) {
 
-		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-			String sql = "insert into registrationcatalog(course_id, course_name, course_department, available_slots, total_students_in_course) values (?, ?, ?, ?, ?);";
+	try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+		String sql = "insert into registrationcatalog(course_id, course_name, course_department, available_slots, total_students_in_course) values (?, ?, ?, ?, ?);";
 
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, obj.getCourseId());
-			pstmt.setString(2, obj.getCourseName());
-			pstmt.setString(3, obj.getCourseDepartment());
-			pstmt.setInt(4, obj.getAvailableSlots());
-			pstmt.setInt(5, obj.getTotalStudentsInCourse());
-			ResultSet rs = pstmt.executeQuery();
-			// that's it right to update the slots in a table??
-			int action = pstmt.executeUpdate();
-			if(action > 0) {
-				return true;
-			}
-			else {
-				return false;
-			}
-
-		}
-
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, obj.getCourseId());
+		pstmt.setString(2, obj.getCourseName());
+		pstmt.setString(3, obj.getCourseDepartment());
+		pstmt.setInt(4, obj.getAvailableSlots());
+		pstmt.setInt(5, obj.getTotalStudentsInCourse());
+		ResultSet rs = pstmt.executeQuery();
 	}
+	catch (SQLException e) {
+		e.printStackTrace();
+	}
+}
 
 	
 	
@@ -243,16 +233,17 @@ public class CourseDAO implements CrudDAO<Course> {
 		return true;
 	}
 	
-	
-	
-	
-
-	
-	// make sure that all students registered for said deleted course, get unregistered for the course in the studentcourserecords
+	@Override 
 	public boolean delete(int courseID) {
+		return true;
+	}
 	
+	
+	
+	public void deleteRecord(int courseID) {
+		
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-			String sql = "delete from registrationcatalog where course_id = ?;";
+			String sql = "delete from registrationcatalog where course_id = ?";
 
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, courseID);
@@ -261,19 +252,19 @@ public class CourseDAO implements CrudDAO<Course> {
 			// this is to check if there were any rows affected, if successful return true
 			// if not return false
 			int count = pstmt.executeUpdate();
-			if (count > 0) {
-				return true;
-			} else {
-				return false;
-			}
+	
 
 		}
 
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+
 		}
+	
+	
+	
+	
 
 	}
 

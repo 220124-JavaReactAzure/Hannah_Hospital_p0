@@ -23,44 +23,30 @@ public class FacultyService {
 		this.studentCourseDAO = studentCourseDAO;
 		this.sessionUser = null;
 	}
-	
+
 
 	public User getSessionUser() {
-		if (sessionUser.getType() == "faculty") {
-			return sessionUser;
-		}
-		throw new AuthenticationException("You are not a faculty member.");
+
+		return sessionUser;
 
 	}
-	
+
 	public Course findCourseByCourseID(int courseID) {
 		Course course = courseDAO.findByIdAndType(courseID, "course");
 		return course;
 	}
-	
 
 	public List<User> getAllFaculty() {
 		return userDAO.findAll("faculty");
 	}
 	
-	
 	public boolean validateUser(String userName, String passWord) {
-		String type = getSessionUser().getType();
-		if(type == "faculty") {
-			boolean result = userDAO.validateUser(userName, passWord, type);
-			return result;
-		}
-		else {
-			throw new AuthenticationException("You are not a faculty member, you do not have the permissions.");
-		}
-		
+		boolean result = userDAO.validateUser(userName, passWord, "faculty");
+		return result;
 	}
 	
 	
-	
-	
 
-	// what am I doing????
 	public void authenticateFaculty(String username, String password) {
 
 		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
@@ -75,11 +61,11 @@ public class FacultyService {
 					"Unauthenticated user, information provided was not found in our database.");
 		}
 		sessionUser = authenticatedUser;
-//		return true;
 	}
-	
-	
 
+	
+	
+	
 	public boolean isUserValid(User newUser) {
 		if (newUser == null)
 			return false;
@@ -101,63 +87,43 @@ public class FacultyService {
 		return sessionUser != null;
 	}
 
-	public boolean registerNewCourse(Course newCourse) {
-		// how do I prove that the faculty member has the right credentials, is this
-		// enough? I might possibly need more authentication
+	
+	public void registerNewCourse(Course newCourse) {
 		if (!isUserValid(sessionUser)) {
 			throw new InvalidRequestException("Invalid user data provider");
 		}
-//		authenticateFaculty(sessionUser.getUserName(), sessionUser.getPassword());
 
-		boolean persistenceResult = courseDAO.create(newCourse);
-		if (persistenceResult) {
-			Course persistedCourse = newCourse;
-
-			return true;
-		}
-
-		else {
-			return false;
-//			throw new ResourcePersistenceException("The course could not be persisted.");
-		}
+		courseDAO.createRecord(newCourse);
 
 	}
 	
+
 	public boolean updateCourse(Course courseToUpdate) {
 		boolean updateResult = courseDAO.update(courseToUpdate);
-		if(updateResult) {
+		if (updateResult) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
+	
+	public void removeCourse(Course courseToRemove) {
 
-	// this functionality is for faculty to remove a course from the registrar, I
-	// should also unregister all registered students for this course in {}
-	public boolean removeCourse(Course courseToRemove) {
-		// first ensure that the sessionUser is a faculty member, you must authenticate
-		boolean authenticationResult = userDAO.validateUser(sessionUser.getUserName(), sessionUser.getPassword(), sessionUser.getType());
-		if (authenticationResult) {
 			int courseID = courseToRemove.getCourseId();
-			boolean courseDeletionResult = courseDAO.delete(courseID);
-			if (!courseDeletionResult) {
-				throw new ResourcePersistenceException(
-						"This course was not able to be removed from the Course Registration Catalog. ");
-			}
-			// now, remove all student/course registration instances from the studentcourserecords table
-			int courseIdValue = courseToRemove.getCourseId();
-			boolean studentCourseDeletionResult = studentCourseDAO.delete(courseIdValue);
-			if (studentCourseDeletionResult) {
-				return true;
-			} else {
-				return false;
-			}
-
-		} else {
-			throw new AuthenticationException("You are not an authenticated faculty member.");
-		}
-	}
+			// delete from registrationcatalog
+			courseDAO.deleteRecord(courseID);
+			//remove all records from studentcourserecords that have course_id=courseID
+			studentCourseDAO.deleteRecord(courseID);
+		} 
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

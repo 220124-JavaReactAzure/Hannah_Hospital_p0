@@ -26,8 +26,8 @@ public class FacultyLoginMenu extends Menu {
 			String username = bufferedReader.readLine();
 			System.out.print("Password: ");
 			String password = bufferedReader.readLine();
-
 			boolean result = facultyService.validateUser(username, password);
+
 			if (result) {
 				facultyService.authenticateFaculty(username, password);
 				menuRouter.transfer("/FacultyDashboardMenu");
