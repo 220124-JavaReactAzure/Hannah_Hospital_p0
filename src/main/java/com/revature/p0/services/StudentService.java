@@ -24,11 +24,6 @@ public class StudentService {
 	private final CourseDAO courseDAO;
 	private User sessionUser;
 	
-	// This will be the tracker for assigning students an ID that is different from the others. 
-	// Every time a student is successfully registered in the student catalog, I will increase it by 1
-//	private static int studentIdTracker = 0;
-	// Idk I left it in the RegisterStudentMenu?? is that a bad place to put it.
-
 	
 	public StudentService(UserDAO userDAO,CourseDAO courseDAO, StudentCourseDAO studentCourseDAO) {
 		this.userDAO = userDAO;
@@ -164,9 +159,16 @@ public class StudentService {
 	
 	
 	public void viewMyRegisteredCourses(int studentID) {
-//		int studentID = sessionUser.getID();
 		List<StudentCourseInstance> myListSCI = studentCourseDAO.findAllRegisteredCourses(studentID);
+//		if(myListSCI.size()>0) {
+//			System.out.println("These are the courses you are registered for: ");
+//			for(int i = 0; i< myListSCI.size(); i++) {
+//				System.out.println(myListSCI.get(i).getCourseId());
+//			}
+//		}
+		// it's not reaching the courseDAO code
 		if(myListSCI.size() > 0) {
+			System.out.println();
 			System.out.println("These are the courses that you are registered for: ");
 			List<Course> registeredCourses = courseDAO.findAllRegisteredCoursesForStudent(studentID);
 			for(int i = 0; i< registeredCourses.size(); i++) {

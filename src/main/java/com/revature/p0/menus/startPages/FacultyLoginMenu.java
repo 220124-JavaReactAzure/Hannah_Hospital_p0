@@ -27,13 +27,9 @@ public class FacultyLoginMenu extends Menu {
 			System.out.print("Password: ");
 			String password = bufferedReader.readLine();
 
-			// Test for a select all
-//	     List<Scientist> test = scientistService.getAllScientists();
-//	     System.out.println(test.get(0));
-			// Implement an authentication and successful login:
-
 			boolean result = facultyService.validateUser(username, password);
 			if (result) {
+				facultyService.authenticateFaculty(username, password);
 				menuRouter.transfer("/FacultyDashboardMenu");
 			} else {
 				System.out.println(

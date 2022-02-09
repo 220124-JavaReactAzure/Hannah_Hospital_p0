@@ -190,9 +190,10 @@ public class CourseDAO implements CrudDAO<Course> {
 
 	// this method, given the studentID, returns a list of all of the courses that the student is registered for
 	public List<Course> findAllRegisteredCoursesForStudent(int studentID){
-		List<Course> courses = new ArrayList<>();
+		List<Course> courses = new ArrayList<Course>();
 		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-			String sql = "studentcourserecords inner join registrationcatalog on course_name where student_id = ? ; ";
+//			String sql = "studentcourserecords inner join registrationcatalog on course_name where student_id = ? ";
+			String sql = "select * from registrationcatalog inner join studentcourserecords on registrationcatalog.course_id=studentcourserecords.course_id where student_id = ? ";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, studentID);
 			ResultSet rs = pstmt.executeQuery();

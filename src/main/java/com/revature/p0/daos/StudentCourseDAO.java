@@ -114,9 +114,9 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 	// find all the courses that a particular student is registered for, it returns a list of the studentCourseInstances
 	public List<StudentCourseInstance> findAllRegisteredCourses(int studentID){
 		// if the student is valid, and authenticated. include some functionality for that first
-		List<StudentCourseInstance> listSCI = new ArrayList<>();
+		List<StudentCourseInstance> listSCI = new ArrayList<StudentCourseInstance>();
 		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-			String sql = "select * from studentcourserecords where student_id = ? ; ";
+			String sql = "select * from studentcourserecords where student_id = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, studentID);
 			ResultSet rs = pstmt.executeQuery();
@@ -136,7 +136,7 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return listSCI;
 	}
 	
 	
@@ -146,7 +146,7 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 	public boolean update(StudentCourseInstance updatedObject) {
 		// TODO Auto-generated method stub
 		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-			String sql = "update studentcourserecords set student_course_id = ? ,course_id = ? , student_id = ?, where student_course_id = ? ;";
+			String sql = "update studentcourserecords set student_course_id = ? ,course_id = ? , student_id = ?, where student_course_id = ?";
 
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, updatedObject.getStudentCourseId());
