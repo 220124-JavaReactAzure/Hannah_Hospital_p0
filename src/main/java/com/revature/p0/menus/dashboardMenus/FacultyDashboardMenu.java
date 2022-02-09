@@ -68,7 +68,12 @@ public class FacultyDashboardMenu extends Menu {
 					String courseIDUpdate = bufferedReader.readLine();
 					int courseIdUpdate = Integer.parseInt(courseIDUpdate);
 					Course courseToUpdate = facultyService.findCourseByCourseID(courseIdUpdate);
-					System.out.println("Which aspect of the course would you like to change? \n \1.Course Name\n \2.Course Department\n \3.Available Slots\n \4.Total Students in Course ");
+//					System.out.println("Which aspect of the course would you like to change? \n \1.Course Name\n \2.Course Department\n \3.Available Slots\n \4.Total Students in Course ");
+					System.out.println("Which aspect of the course would you like to change?");
+					System.out.println("1. Course Name");
+					System.out.println("2. Course Department");
+					System.out.println("3. Available Slots");
+					System.out.println("4. Total Number of Students in Course");
 					String userChoice = bufferedReader.readLine();
 					switch(userChoice) {
 					case "1":
@@ -83,12 +88,14 @@ public class FacultyDashboardMenu extends Menu {
 						break;
 					case "3":
 						System.out.println("What would you like to set the number of available slots to? ");
-						int newAvailableSlots = (int)bufferedReader.read();
+						String stringSlots = bufferedReader.readLine();
+						int newAvailableSlots = Integer.parseInt(stringSlots);
 						courseToUpdate.setAvailableSlots(newAvailableSlots);
 						break;
 					case "4":
 						System.out.println("What would you like to set the number of total students in course to? ");
-						int newTotalStudents = (int)bufferedReader.read();
+						String totalStudents = bufferedReader.readLine();
+						int newTotalStudents = Integer.parseInt(totalStudents);
 						courseToUpdate.setTotalStudentsInCourse(newTotalStudents);
 						break;
 					default:
@@ -98,13 +105,9 @@ public class FacultyDashboardMenu extends Menu {
 					
 					}
 					Course updatedCourse = courseToUpdate;
-					boolean updateResult = facultyService.updateCourse(courseToUpdate);
-					if(updateResult) {
-						System.out.println("The course was successfully updated!");
-					}
-					else {
-						System.out.println("The course was not successfully updated.");
-					}
+					facultyService.updateCourse(courseToUpdate);
+					System.out.println("The course was successfully updated!");
+		
 					break;
 					
 					

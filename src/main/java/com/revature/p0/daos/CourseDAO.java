@@ -68,15 +68,11 @@ public void createRecord(Course obj) {
 
 	
 	
-	// this is used to update a record in the registrationcatalog given the updated
-	// object
-	// since the course_id is the primary key, it will be the factor to determine
-	// how to update the catalog
-	public boolean update(Course updatedObject) {
+
+	public void updateCourse(Course updatedObject) {
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-			String sql = "update registrationcatalog set course_id = ? ,course_name = ? , course_department = ? "
-					+ "available_slots = ? , total_students_in_course = ? , where course_id = ? ;";
+			String sql = "update registrationcatalog set course_id = ? ,course_name = ? , course_department = ? , available_slots = ? , total_students_in_course = ?  where course_id = ? ";
 
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, updatedObject.getCourseId());
@@ -87,22 +83,17 @@ public void createRecord(Course obj) {
 			pstmt.setInt(6, updatedObject.getCourseId());
 
 			ResultSet rs = pstmt.executeQuery();
-			// this is to check if there were any updates, if successful return true if not
-			// return false
-			int count = pstmt.executeUpdate();
-			if (count > 0) {
-				return true;
-			} else {
-				return false;
-			}
 
 		}
 
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
 
+	}
+	
+	public boolean update(Course updatedObject) {
+		return true;
 	}
 
 	

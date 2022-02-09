@@ -101,13 +101,9 @@ public class FacultyService {
 	}
 	
 
-	public boolean updateCourse(Course courseToUpdate) {
-		boolean updateResult = courseDAO.update(courseToUpdate);
-		if (updateResult) {
-			return true;
-		} else {
-			return false;
-		}
+	public void updateCourse(Course courseToUpdate) {
+		courseDAO.updateCourse(courseToUpdate);
+
 	}
 	
 	public void removeCourse(Course courseToRemove) {
