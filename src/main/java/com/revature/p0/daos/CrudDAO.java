@@ -7,7 +7,8 @@ public interface CrudDAO<T> {
 	
 	
 	//create
-	boolean create(T obj);
+//	boolean create(T obj);
+	void create(T obj);
 	
 	
 	//read

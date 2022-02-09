@@ -47,27 +47,32 @@ public class StudentService {
 			throw new InvalidRequestException("Invalid user data provider");
 		}
 
-		boolean usernameAvailable = userDAO.findByUsernameAndType(newUser.getUserName(), newUser.getType()) == null;
+//		boolean usernameAvailable = userDAO.findByUsernameAndType(newUser.getUserName(), newUser.getType()) == null;
+//		// testing
+//		System.out.println(usernameAvailable);
+//		//
+//		if (!usernameAvailable) {
+//				throw new ResourcePersistenceException("The provided username was already taken in the database");
+//		}
 
-		if (!usernameAvailable) {
-				throw new ResourcePersistenceException("The provided username was already taken in the database");
-		}
-
-		boolean persistenceResult = userDAO.create(newUser);
-		if (persistenceResult) {
-			User persistedUser = newUser;
-			
-
-			return persistedUser;
-		}
-
-		else {
-			throw new ResourcePersistenceException("The student could not be persisted.");
-		}
+//		boolean persistenceResult = userDAO.create(newUser);
+		userDAO.create(newUser);
+		return newUser;
+//		if (persistenceResult) {
+//			User persistedUser = newUser;
+//			
+//
+//			return persistedUser;
+//		}
+//
+//		else {
+//			throw new ResourcePersistenceException("The student could not be persisted.");
+//		}
 
 	}
 
 
+	// works well
 	public void viewAvailableCourses() {
 		// if the student is valid and a registered student, they can access this
 		// functionality
@@ -75,15 +80,17 @@ public class StudentService {
 		if (availableCourses.size() > 0) {
 			System.out.println("Here are the current available courses: ");
 			for (int i = 0; i < availableCourses.size(); i++) {
-				String result = "Course ID: " + availableCourses.get(i).getCourseId() + " ; Course Name: "
-						+ availableCourses.get(i).getCourseName() + " ; Course Department: "
+				String result = "Course ID: " + availableCourses.get(i).getCourseId() + " | Course Name: "
+						+ availableCourses.get(i).getCourseName() + " | Course Department: "
 						+ availableCourses.get(i).getCourseDepartment() + "";
 				System.out.println(result);
+				System.out.println();
 
 			}
 		} 
 		else {
 			System.out.println("There are currently no available courses.");
+			System.out.println();
 		}
 
 	}
@@ -91,12 +98,13 @@ public class StudentService {
 	// returns the SCI from the SCDAO, which will connect to db
 	public StudentCourseInstance getStudentCourseInstance(int courseID) {
 		StudentCourseInstance sci = studentCourseDAO.findByIdAndType(courseID, "course");
-		if(sci == null) {
-			throw new InvalidRequestException("The student is not registered for this course.");
-		}
-		else {
-			return sci;
-		}
+		return sci;
+//		if(sci == null) {
+//			throw new InvalidRequestException("The student is not registered for this course.");
+//		}
+//		else {
+//			return sci;
+//		}
 	}
 	
 	
@@ -108,18 +116,11 @@ public class StudentService {
 	
 	
 	
-	
-	public boolean registerForCourse(StudentCourseInstance sci) {
+	// look here 
+	public void registerForCourse(StudentCourseInstance sci) {
 		boolean isAvailable = courseDAO.isCourseAvailable(sci.getCourseId());
 		if(isAvailable) {
-			
-			boolean studentCourseSuccess = studentCourseDAO.create(sci);
-			if(studentCourseSuccess) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			studentCourseDAO.createRecord(sci);
 		}
 		else {
 			throw new ResourcePersistenceException("This course is not available. There are no more available slots.");
@@ -131,15 +132,15 @@ public class StudentService {
 	
 	// to cancel your registration for a certain course
 	// should I include some functionality to make sure that the sci is authenticated and valid??
-	public boolean cancelRegistration(StudentCourseInstance sci) {
+	public void cancelRegistration(StudentCourseInstance sci) {
 		int courseID = sci.getCourseId();
-		boolean deletionResult = studentCourseDAO.delete(courseID);
-		if(deletionResult) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		studentCourseDAO.deleteRecord(courseID);
+//		if(deletionResult) {
+//			return true;
+//		}
+//		else {
+//			return false;
+//		}
 	}
 	
 	
@@ -185,7 +186,7 @@ public class StudentService {
 
 	
 
-	public void authenticateStudents(String username, String password) {
+	public void authenticateStudent(String username, String password) {
 
 		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
 			throw new InvalidRequestException(

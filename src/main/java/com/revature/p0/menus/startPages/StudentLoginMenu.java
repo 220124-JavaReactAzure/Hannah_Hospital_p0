@@ -27,18 +27,12 @@ public class StudentLoginMenu extends Menu {
 	     String username = bufferedReader.readLine();
 	     System.out.print("Password: ");
 	     String password = bufferedReader.readLine();
-
-	     
-	     // Test for a select all
-//	     List<Scientist> test = scientistService.getAllScientists();
-//	     System.out.println(test.get(0));
-	     // Implement an authentication and successful login:
-	     
-	     
 	     try {
 	    	 boolean result = studentService.validateUser(username, password);
 	    	 if(result) {
+	    		 studentService.authenticateStudent(username, password);
 	    		 menuRouter.transfer("/StudentDashboardMenu");
+	    		 
 
 	    	 }
 	    	 else {

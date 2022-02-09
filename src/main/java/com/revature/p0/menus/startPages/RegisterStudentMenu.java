@@ -12,7 +12,7 @@ import com.revature.p0.util.MenuRouter;
 public class RegisterStudentMenu extends Menu {
 
 	private final StudentService studentService;
-	private static int studentIdTracker = 0;
+	private static int studentIdTracker = 2;
 
 	public RegisterStudentMenu(BufferedReader bufferedReader, MenuRouter menuRouter, StudentService studentService) {
 		super("RegisterStudent", "/RegisterStudentMenu", bufferedReader, menuRouter);
@@ -37,10 +37,15 @@ public class RegisterStudentMenu extends Menu {
 	     User newUser = studentService.registerNewStudent(user);
 	     if(user.getID() == newUser.getID()) {
 	    	 studentIdTracker++;
+		     System.out.println("You have successfully been registered as a student!");
+		     System.out.println("Routing you back to the login menu...");
+		     menuRouter.transfer("/StudentLoginMenu");
 	     }
-	     System.out.println("You have successfully been registered as a student!");
-	     System.out.println("Routing you back to the login menu...");
-	     menuRouter.transfer("/StudentLoginMenu");
+	     else {
+	    	 System.out.println("You have not been successfully registrered as a new student. Routing you back to the welcome menu.");
+	    	 menuRouter.transfer("/welcome");
+	     }
+
 	     
 		}
 		catch(IOException e) {

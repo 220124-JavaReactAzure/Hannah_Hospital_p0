@@ -16,8 +16,8 @@ import com.revature.p0.util.datasource.ConnectionFactory;
 
 public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 
-	@Override
-	public boolean create(StudentCourseInstance obj) {
+	
+	public boolean createRecord(StudentCourseInstance obj) {
 		// TODO Auto-generated method stub
 		// include functionality so that a studentCourseInstance can only be made if the available_slots > 0 in the registrationCatalog. I want to get a boolean as a result
 		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
@@ -28,20 +28,29 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 			ps.setInt(3, obj.getStudentId());
 			
 			ResultSet rs = ps.executeQuery();
+			return true;
 			
-			int action = ps.executeUpdate();
-			if(action > 0) {
-				return true;
-			}
-			else {
-				return false;
-			}
+//			int action = ps.executeUpdate();
+//			if(action > 0) {
+//				return true;
+//			}
+//			else {
+//				return false;
+//			}
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
+	
+	
+	
+	@Override
+	public void create(StudentCourseInstance obj) {
+		System.out.println("hi");
+	}
+	
 	
 
 	@Override
@@ -190,6 +199,25 @@ public class StudentCourseDAO implements CrudDAO<StudentCourseInstance> {
 			e.printStackTrace();
 		}
 		return false;
+
+	}
+	
+	// look at this one
+	public void deleteRecord(int ID) {
+		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+			String sql = "delete from studentcourserecords where course_id = ?";
+
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ID);
+
+			ResultSet rs = pstmt.executeQuery();
+
+		}
+
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 
 	}
 	

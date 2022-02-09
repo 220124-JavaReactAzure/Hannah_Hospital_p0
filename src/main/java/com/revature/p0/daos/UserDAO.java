@@ -23,16 +23,15 @@ public class UserDAO implements CrudDAO<User> {
 		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
 			switch (type) {
 			case "student":
-				sql = "select * from students where username = ? and password = ?";
+				sql = "select * from students where student_username = ? and student_password = ?";
 				break;
 			case "faculty":
-				sql = "select * from faculty where username = ? and password = ?";
+				sql = "select * from faculty where faculty_username = ? and faculty_password = ?";	
 				break;
 			default:
 				throw new AuthenticationException("You are neither a student nor a faculty member.");
 
 			}
-
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, username);
 			pstmt.setString(2, password);
@@ -40,8 +39,10 @@ public class UserDAO implements CrudDAO<User> {
 			
 			while(rs.next()) {
 				String checkUsername = rs.getString(type + "_username");
+				System.out.println(checkUsername);
 				String checkPassword = rs.getString(type + "_password");
-				if(checkUsername == username && checkPassword == password) {
+				System.out.println(checkPassword);
+				if(checkUsername.equals(username) && checkPassword.equals(password)) {
 					return true;
 				}
 				else {
@@ -70,10 +71,10 @@ public class UserDAO implements CrudDAO<User> {
 
 			switch (type) {
 			case "student":
-				sql = "select * from students where username = ? and password = ?";
+				sql = "select * from students where student_username = ? and student_password = ?";
 				break;
 			case "faculty":
-				sql = "select * from faculty where username = ? and password = ?";
+				sql = "select * from faculty where faculty_username = ? and faculty_password = ?";
 				break;
 			default:
 				throw new AuthenticationException("You are neither a student nor a faculty member.");
@@ -111,10 +112,10 @@ public class UserDAO implements CrudDAO<User> {
 
 			switch (type) {
 			case "student":
-				sql = "select * from students where username = ?";
+				sql = "select * from students where student_username = ?";
 				break;
 			case "faculty":
-				sql = "select * from faculty where username = ?";
+				sql = "select * from faculty where faculty_username = ?";
 				break;
 			default:
 				throw new AuthenticationException("You are neither a student nor a faculty member.");
@@ -187,13 +188,13 @@ public class UserDAO implements CrudDAO<User> {
 		return null;
 		
 	}
-	
+
 	// this is to create a new student, or rather register a new student into the students table
-	public boolean create(User obj) {
+	public void create(User obj) {
 		if(obj.getType()=="student") {
 			// should I first include some kind of check to first see if the user is already in the db? idk 
 			try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-				String sql = "insert into students(student_id, student_first_name, student_last_name, student_username, student_password) values (?, ?, ?, ?, ?);";
+				String sql = "insert into students(student_id, student_first_name, student_last_name, student_username, student_password) values (?, ?, ?, ?, ?)";
 				
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, obj.getID());
@@ -205,13 +206,13 @@ public class UserDAO implements CrudDAO<User> {
 				
 				ResultSet rs = pstmt.executeQuery();
 				// this is to check if there were any updates, if successful return true if not return false
-				int count = pstmt.executeUpdate();
-				if(count > 0) {
-					return true;
-				}
-				else {
-					return false;
-				}
+//				int count = pstmt.executeUpdate();
+//				if(count > 0) {
+//					return true;
+//				}
+//				else {
+//					return false;
+//				}
 
 
 				}
@@ -219,7 +220,6 @@ public class UserDAO implements CrudDAO<User> {
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
-			return false;
 
 				}
 		else {

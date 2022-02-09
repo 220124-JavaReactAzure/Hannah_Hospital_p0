@@ -159,10 +159,9 @@ public class CourseDAO implements CrudDAO<Course> {
 
 		try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-			String sql = "select * from registrationcatalog where available_slots > 0 ;";
-			Statement s = (Statement) conn.createStatement();
-
-			ResultSet resultSet = ((java.sql.Statement) s).executeQuery(sql);
+			String sql = "select * from registrationcatalog where available_slots > 0 ";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ResultSet resultSet = pstmt.executeQuery();
 
 			while (resultSet.next()) {
 				Course course = new Course();
@@ -221,23 +220,26 @@ public class CourseDAO implements CrudDAO<Course> {
 	public boolean isCourseAvailable(int courseID) {
 		try(Connection conn = ConnectionFactory.getInstance().getConnection()){
 			// is this the correct syntax
-			String sql = "select * from registrationcatalog where course_id = ? ;";
+			String sql = "select * from registrationcatalog where course_id = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, courseID);
 			ResultSet rs = pstmt.executeQuery();
-			int available_slots = rs.getInt("available_slots");
-			if(available_slots > 0) {
-				return true;
+			while(rs.next()) {
+				int available_slots = rs.getInt("available_slots");
+				if(available_slots > 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
-			else {
-				return false;
-			}
+
 		}
 		
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+		return true;
 	}
 	
 	

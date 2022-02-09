@@ -14,7 +14,7 @@ import com.revature.p0.util.MenuRouter;
 public class StudentDashboardMenu extends Menu {
 
 		private final StudentService studentService;
-		private static int studentCourseInstanceIDTracker = 0;
+		private static int studentCourseInstanceIDTracker = 100;
 
 		public StudentDashboardMenu(BufferedReader bufferedReader, MenuRouter menuRouter, StudentService studentService) {
 			super("StudentDashboard", "/StudentDashboardMenu", bufferedReader, menuRouter);
@@ -31,8 +31,8 @@ public class StudentDashboardMenu extends Menu {
 				menuRouter.transfer("/StudentLoginMenu");
 				return;
 			}
-
 			while (studentService.isSessionActive()) {
+				System.out.println();
 				System.out.println("Welcome " + studentService.getSessionUser().getFirstName());
 				System.out.println("Read the instructions below, and type into the console what you wish to do.");
 				String menu = "1) View all classes available for registration\n" + 
@@ -43,6 +43,7 @@ public class StudentDashboardMenu extends Menu {
 						 "> ";
 
 				System.out.print(menu);
+				System.out.println();
 				
 			try {
 
@@ -51,59 +52,35 @@ public class StudentDashboardMenu extends Menu {
 				switch (userSelection) {
 				case "1":
 					System.out.println("View all classes available for registration");
-					studentService.viewAvailableCourses();
-					
-					// do i even need to transfer to a new menu
-//					menuRouter.transfer("/StudentCourseRegistrationMenu");
-					
+					studentService.viewAvailableCourses();				
 					break;
 				
-				
-				// how do I implement a StudentCourseInstance from here?? should I, or where should I do that??
 				case "2":
 					System.out.println("Register for an open and available class");
 					System.out.println("Type into the console, the course ID of the class you wish to register for: ");
-					// will this casting work??
-					int courseID = (int) bufferedReader.read();
+
+					String courseId = bufferedReader.readLine();
+					int courseID = Integer.parseInt(courseId);
 					StudentCourseInstance sci = new StudentCourseInstance(courseID);
 					sci.setStudentId(sessionUser.getID());
 					sci.setStudentCourseId(studentCourseInstanceIDTracker);
-					boolean successfulRegistration = studentService.registerForCourse(sci);
-					if(successfulRegistration) {
-						System.out.println("You succcessfully registered for course: "+ courseID);
-						studentCourseInstanceIDTracker++;
-					}
-					else {
-						System.out.println("You were not able to successfully register for course: "+courseID);
-						// Do i need to route them back to a menu??
-						}
-					
-					
-//					menuRouter.transfer("/StudentCourseRegistration");
+					studentService.registerForCourse(sci);
+					System.out.println("You succcessfully registered for course: "+ courseID);
+					studentCourseInstanceIDTracker++;
+
 					break;
 				case "3":
 					System.out.println("Cancel your registration for a class");
 					System.out.print("Type the course ID of course you would like to cancel your registration for: ");
-					int courseIdDelete = (int) bufferedReader.read();
+					String courseIDDelete = bufferedReader.readLine();
+					int courseIdDelete = Integer.parseInt(courseIDDelete);
 					StudentCourseInstance SCI = studentService.getStudentCourseInstance(courseIdDelete);
-					boolean deletionResult = studentService.cancelRegistration(SCI);
-					if(deletionResult) {
-						System.out.println("You successfully deleted course: "+ courseIdDelete);
-					}
-					else {
-						throw new ResourcePersistenceException("There was an issue with deleting your course: "+courseIdDelete);
-						// should I reroute them somewhere??
-					}
-
-//					menuRouter.transfer("/RemoveFromRegistrationCatalogMenu");
+					studentService.cancelRegistration(SCI);
 					break;
 				
 				case "4":
 					System.out.println("View all of your registered courses");
 					studentService.viewMyRegisteredCourses(sessionUser.getID());
-					
-					
-//					menuRouter.transfer("/RemoveFromRegistrationCatalogMenu");
 					break;
 					
 				case "5":
